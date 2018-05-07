@@ -5,7 +5,21 @@ import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { getAllEndPoints, loadSchema, loadRefs } from './swagger';
 import { createGQLObject, mapParametersToFields } from './typeMap';
 
+// import { buildResolver } from './graphql-resolver';
+
 type Endpoints = {[string]: Endpoint};
+
+function writeContext(endpoints) {
+  const context = {};
+  Object.keys(endpoints).forEach(endpoint => {
+    context[endpoint] = function (options) {
+      return (rp(endpoint.request(options, 'http://petstore.swagger.io/v2')));
+    };
+  });
+  const util = require('util');
+  // fs.writeFileSync('./context.js', JSON.stringify(context));
+  console.log('HERE ' + util.inspect(context));
+}
 
 const schemaFromEndpoints = (endpoints: Endpoints, proxyUrl, headers) => {
   const gqlTypes = {};
@@ -40,6 +54,8 @@ const resolver = (endpoint: Endpoint, proxyUrl: ?(Function | string), customHead
     if (opts.headers) {
       req.headers = Object.assign(customHeaders, req.headers, opts.headers);
     }
+    req.url = req.url.replace('{countryCode}', 'US');
+    // console.log('HEREEEE ' + util.inspect(req));
     const res = await rp(req);
     return JSON.parse(res);
   };

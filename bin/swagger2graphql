@@ -3,6 +3,8 @@ var argv = require('yargs').argv;
 var build = require('../lib');
 var graphql = require('graphql');
 
+var util = require('util');
+
 if (argv.help) {
   console.log('\nUsage: swagger2graphql --swagger=/path/to/schema.json');
 }
@@ -12,6 +14,7 @@ if (!argv.swagger) {
 } else {
   build(argv.swagger).then(schema => {
     console.log(graphql.printSchema(schema));
+    // console.log(util.inspect(schema, { showHidden: true, depth: null }));
   }).catch(console.log);
 }
 

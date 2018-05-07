@@ -14,7 +14,8 @@ export const getSchema = () => {
 
 const getGQLTypeNameFromURL = (method: string, url: string) => {
   const fromUrl = url.replace(/[\{\}]+/g, '').replace(/[^a-zA-Z0-9_]+/g, '_');
-  return `${method}${fromUrl}`;
+  const val = `${method}${fromUrl}`;
+  return val;
 };
 
 const getSuccessResponse = (responses: Responses) => {
@@ -39,7 +40,10 @@ export const loadRefs = async (pathToSchema: string) => {
   return await refParser.resolve(pathToSchema);
 };
 
-const replaceOddChars = (str) => str.replace(/[^_a-zA-Z0-9]/g, '_');
+const replaceOddChars = (str) => {
+  console.log('Replacing ' + str);
+  return str.replace(/[^_a-zA-Z0-9]/g, '_');
+};
 
 const getServerPath = (schema) => {
   let server = schema.servers && Array.isArray(schema.servers) ? schema.servers[0] : schema.servers;

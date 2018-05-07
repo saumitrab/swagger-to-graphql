@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+var argv = require('yargs').argv;
+var build = require('../lib');
+var graphql = require('graphql');
+
+var util = require('util');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
+
+if (argv.help) {
+  console.log('\nUsage: swagger2graphql --swagger=/path/to/schema.json');
+}
+
+if (!argv.swagger) {
+  console.log('\nPlease provide path to swagger schema. \n--help for usage example');
+} else {
+  build(argv.swagger).then(schema => {
+    // console.log(graphql.printSchema(schema));
+    // console.log(util.inspect('what ' + util.inspect(graphql)));
+
+    const PORT = 3000;
+
+    const app = express();
+
+    // bodyParser is needed just for POST.
+    app.use('/graphql', bodyParser.json(), graphqlExpress({ schema, context: { GQLProxyBaseUrl: 'https://api-staging.internal.snc1', GraphqlParameters: 'client_id=dc707fcfdffef39cc5d7bb28cfe9b241be1b8af7'} }));
+    app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' })); // if you want GraphiQL enabled
+
+    app.listen(PORT);
+  }).catch(console.log);
+}
+
