@@ -4,13 +4,16 @@
   "author": "Roman Krivtsov",
   "bin": "./bin/swagger2graphql",
   "dependencies": {
+    "apollo-server-express": "^1.3.6",
     "babel-runtime": "^6.25.0",
+    "body-parser": "^1.18.2",
+    "gofer": "^3.5.5",
     "graphql": "^0.12.3",
     "isomorphic-fetch": "^2.2.1",
     "js-yaml": "^3.8.4",
     "json-schema-ref-parser": "^3.1.2",
     "lodash": "^4.16.4",
-    "node-request-by-swagger": "^1.0.7",
+    "node-request-by-swagger": "https://github.com/saumitrab/node-request-by-swagger.git#feature/master/support-refs",
     "request": "^2.75.0",
     "request-promise": "^4.1.1",
     "yargs": "^8.0.2"
@@ -29,7 +32,7 @@
     "eslint": "^3.19.0",
     "eslint-config-airbnb-es5": "^1.1.0",
     "eslint-plugin-react": "^6.5.0",
-    "express": "^4.15.3",
+    "express": "^4.16.3",
     "express-graphql": "^0.6.6",
     "flow-bin": "^0.66.0",
     "mocha": "^3.1.2"

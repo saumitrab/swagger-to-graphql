@@ -3,15 +3,30 @@ var argv = require('yargs').argv;
 var build = require('../lib');
 var graphql = require('graphql');
 
+const express = require('express');
+const bodyParser = require('body-parser');
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
+
 if (argv.help) {
-  console.log('\nUsage: swagger2graphql --swagger=/path/to/schema.json');
+  console.log('\nUsage: swagger2graphql --swagger=/path/to/schema.json [--print] [--server]');
 }
 
 if (!argv.swagger) {
   console.log('\nPlease provide path to swagger schema. \n--help for usage example');
 } else {
   build(argv.swagger).then(schema => {
-    console.log(graphql.printSchema(schema));
+    if (argv.print) {
+      console.log(graphql.printSchema(schema));
+    }
+    if (argv.server) {
+      const PORT = 3000;
+      const app = express();
+
+      app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
+      app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' })); // if you want GraphiQL enabled
+
+      app.listen(PORT);
+    }
   }).catch(console.log);
 }
 

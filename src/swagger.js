@@ -92,15 +92,16 @@ export const getAllEndPoints = (schema: SwaggerSchema, refs: RefType): {[string]
         response: getSuccessResponse(obj.responses),
         request: (args: GraphQLParameters, optBaseUrl: string) => {
           const baseUrl = optBaseUrl || serverPath;  // eslint-disable-line no-param-reassign
-          if (!baseUrl) {
-            throw new Error('Could not get the base url for endpoints. Check that either your schema has baseUrl or you provided it to constructor');
-          }
-          const url = `${baseUrl}${path}`;
+          // TODO: decide if baseUrl should always be in gofer config or it can be provided via GraphQL server config/ query params
+          // if (!baseUrl) {
+          //   throw new Error('Could not get the base url for endpoints. Check that either your schema has baseUrl or you provided it to constructor');
+          // }
+          const url = `${path}`;
           return getRequestOptions(obj, {
             request: args,
             url,
             method: method
-          }, '');
+          }, '', refs);
         },
         mutation: isMutation
       };

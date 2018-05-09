@@ -5,6 +5,7 @@ import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 import { getAllEndPoints, loadSchema, loadRefs } from './swagger';
 import { createGQLObject, mapParametersToFields } from './typeMap';
 
+const apiclient = require('./api-client');
 type Endpoints = {[string]: Endpoint};
 
 const schemaFromEndpoints = (endpoints: Endpoints, proxyUrl, headers) => {
@@ -40,8 +41,8 @@ const resolver = (endpoint: Endpoint, proxyUrl: ?(Function | string), customHead
     if (opts.headers) {
       req.headers = Object.assign(customHeaders, req.headers, opts.headers);
     }
-    const res = await rp(req);
-    return JSON.parse(res);
+    const res = await apiclient.fetch(req.url, args).json();
+    return res;
   };
 
 const getFields = (endpoints, isMutation, gqlTypes, proxyUrl, headers): GraphQLTypeMap => {

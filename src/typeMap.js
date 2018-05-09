@@ -45,6 +45,8 @@ const getRefProp = (jsonSchema: JSONSchemaType) => {
 export const createGQLObject = (jsonSchema: JSONSchemaType, title: string, isInputType: boolean, gqlTypes: GraphQLTypeMap): GraphQLType => {
   title = (jsonSchema && jsonSchema.title) || title || '';  // eslint-disable-line no-param-reassign
 
+  title = title.replace(/[\.-]/g, '_');// eslint-disable-line no-param-reassign
+
   if (isInputType && !title.endsWith('Input')) {
     title = title + 'Input'; // eslint-disable-line no-param-reassign
     jsonSchema = _.clone(jsonSchema);  // eslint-disable-line no-param-reassign
@@ -146,6 +148,7 @@ const getPrimitiveTypes = (jsonSchema: JSONSchemaType): GraphQLScalarType => {
 export const mapParametersToFields = (parameters: Array<EndpointParam>, typeName: string, gqlTypes: GraphQLTypeMap) => {
   return parameters.reduce((res, param) => {
     const type = jsonSchemaTypeToGraphQL('param_' + typeName, param.jsonSchema, param.name, true, gqlTypes);
+    param.name = param.name.replace(/-/g, '_');
     res[param.name] = {
       type
     };
